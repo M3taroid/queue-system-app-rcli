@@ -1,4 +1,4 @@
-import React, {FunctionComponent, useContext, useState} from 'react';
+import React, {FunctionComponent, useState} from 'react';
 import {
     StyleSheet,
     TextInput, TextInputProps,
@@ -56,7 +56,7 @@ const AppInput: FunctionComponent<AppInputProps> = (
                             ? '#dc2626'
                             : isFocus
                                 ? 'rgba(19,61,182,0.6)'
-                                : borderColor || '#ececec',
+                                : borderColor || '#8a8a8a',
                         backgroundColor: colors.white,
                         color: colors.text,
                         paddingLeft: leftIcon ? 47 : 20,

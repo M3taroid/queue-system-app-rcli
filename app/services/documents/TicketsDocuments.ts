@@ -1,5 +1,6 @@
 import {dbCollection} from "../firebaseService";
-import {addDoc, serverTimestamp, deleteDoc, updateDoc, doc} from "firebase/firestore";
+import {addDoc, serverTimestamp, deleteDoc, updateDoc, doc, query, where, onSnapshot} from "firebase/firestore";
+import {getTodayDate} from "../../utils";
 
 type TicketStatusType = "await" | "current" | "received" | "rejected" | "cancelled"
 
@@ -18,6 +19,27 @@ export interface TicketItemType {
     call: number
 }
 
+export type QueryOptionsType = {
+    orderByDate?: boolean
+}
+
+const mapItem = (item: any) => (
+    {
+        id: item.id,
+        number: item.data().number,
+        cashier: item.data().cashier,
+        date: item.data().date,
+        datetime: item.data().datetime,
+        status: item.data().status,
+        service: item.data().service,
+        call: item.data().call,
+        customer_code: item.data().customer_code,
+        customer_name: item.data().customer_name,
+        received_at: item.data().received_at,
+        created_at: item.data().created_at,
+    }
+)
+
 
 export const ticketCollection = dbCollection("tickets");
 
@@ -32,4 +54,17 @@ export const updateTicketDocument = async (id: string, item: { [key: string]: an
 
 export const deleteTicketsDocument = async (id: string) => {
     return await deleteDoc(doc(ticketCollection, id))
+}
+
+export const hotGetTodayTicketsDocByService = (keys: {
+    service: string,
+}, setData: (items: TicketItemType[]) => void) => {
+    const q = query(ticketCollection,
+        where('service', '==', keys.service),
+        where('date', '==', getTodayDate("fr"))
+    );
+    onSnapshot(q, (snapshot) => {
+        const items: TicketItemType[] = snapshot.docs.map(mapItem)
+        setData(items)
+    })
 }

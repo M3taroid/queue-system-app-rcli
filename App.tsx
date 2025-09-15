@@ -6,7 +6,7 @@ import MainNavigation from "./app/navigations/MainNavigation.tsx";
 
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-//require("../ReactotronConfig");
+require("./ReactotronConfig");
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -18,9 +18,9 @@ const queryClient = new QueryClient({
 function App() {
     return (
         <QueryClientProvider client={queryClient}>
-            <SafeAreaProvider>
-                <MainNavigation/>
-            </SafeAreaProvider>
+                <SafeAreaProvider>
+                    <MainNavigation/>
+                </SafeAreaProvider>
         </QueryClientProvider>
     );
 }

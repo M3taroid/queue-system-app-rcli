@@ -3,15 +3,20 @@ export type StackNavigationParams = {
     Home: undefined;
 };
 export type NavigationType = NativeStackNavigationProp<StackNavigationParams>;
-
-export type ResponseBodyType = {
-    error: boolean,
-    statusCode: number,
-    title: string,
-    message: string,
-    data: any,
-    requestData?: object,
+export type ItemType = {
+    status?: string | number,
+    title?: string,
+    description?: string,
+    [key: string]: any
 }
+export type ResponseBodyType = {
+    online?: boolean,
+    statusCode: number,
+    responseData: any,
+    message?: string,
+    error?: boolean,
+}
+
 export type GetQueryParams = {
     fields?: string
     limit?: number

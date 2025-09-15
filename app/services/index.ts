@@ -6,17 +6,13 @@ export {
     UseGetOpenServices,
 } from "./requests/ServicesQueries"
 
-// export {
-//     UseGetPackagerDetail,
-//     UseUpdateTicket,
-//     UseGetTickets,
-//     UseAddTicket,
-//     UseAddTicketCall,
-//     UseGetTicketCalls
-// } from "./requests/TicketsQueries"
-//
+export {
+    UseAddOpenTicket
+} from "./requests/TicketsQueries"
+
 export {
     addTicketDocument,
     deleteTicketsDocument,
-    updateTicketDocument
+    updateTicketDocument,
+    hotGetTodayTicketsDocByService
 } from "./documents/TicketsDocuments"

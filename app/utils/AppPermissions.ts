@@ -11,7 +11,7 @@ const requestBluetoothPermissions = async () => {
         if (permission) {
             const result = await request(permission);
             if (result === RESULTS.GRANTED) {
-                Alert.alert('Bluetooth permissions granted');
+               // Alert.alert('Bluetooth permissions granted');
             } else {
                 Alert.alert('Bluetooth permissions are required to connect to the printer.');
             }
