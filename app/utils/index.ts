@@ -3,6 +3,7 @@ import {PermissionActionType} from "../types";
 import moment from "moment";
 
 export { default as AppStorage } from './AppStorage'
+export { default as AppPermissions } from './AppPermissions'
 
 export const getTodayDate = (format?: "fr" | "en") => moment().format(format == "en" ? 'YYYY-MM-DD' : "DD-MM-YYYY")
 
