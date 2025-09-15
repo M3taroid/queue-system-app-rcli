@@ -1,7 +1,12 @@
 import {Controller, FieldValues, useForm} from "react-hook-form";
 import {Alert, View} from "react-native";
 import {AppButton, AppInput, AppText} from "../../components";
-import {addTicketDocument, hotGetTodayTicketsDocByService, UseAddOpenTicket} from "../../services";
+import {
+    addTicketDocument,
+    hotGetTodayTicketsDocByService,
+    UseAddOpenTicket,
+    UseAddTicketDocument
+} from "../../services";
 import {getTodayDate} from "../../utils";
 import moment from "moment";
 import {TicketItemType} from "../../services/documents/TicketsDocuments.ts";
@@ -31,6 +36,23 @@ const TicketForm = (props: Props) => {
     }, [ticketType])
 
     const {isPending: isAddingTicket, mutate: AddOpenTicket, data: addResult} = UseAddOpenTicket()
+    const {isPending: isAddingFbTicket, mutate: AddFbTicket, data: addFbResult} = UseAddTicketDocument()
+
+    useEffect(() => {
+        if(addFbResult){
+            AddOpenTicket({
+                ticket_number: `${todayServicesTickets?.length + 1}`,
+                ticket_collection_id: `${addFbResult?.id}`,
+                service_id: `${ticketType?.id}`,
+                cashier_id: "0",
+                ticket_call: "0",
+                ticket_status: "await",
+                customer_id: ticketData?.customer_code,
+                customer_name: ticketData?.customer_name,
+                created_by: "1000"
+            })
+        }
+    }, [addFbResult]);
 
     useEffect(() => {
         if (addResult) {
@@ -64,7 +86,7 @@ const TicketForm = (props: Props) => {
             customer_name: data.customer_name,
             customer_code: data.customer_code,
         })
-        const fbTicket = await addTicketDocument({
+        AddFbTicket({
             number: `${todayServicesTickets?.length + 1}`,
             cashier: "0",
             date: getTodayDate("fr"),
@@ -74,17 +96,6 @@ const TicketForm = (props: Props) => {
             customer_name: data.customer_name,
             customer_code: data.customer_code,
             call: 0
-        })
-        AddOpenTicket({
-            ticket_number: `${todayServicesTickets?.length + 1}`,
-            ticket_collection_id: `${fbTicket?.id}`,
-            service_id: `${ticketType?.id}`,
-            cashier_id: "0",
-            ticket_call: "0",
-            ticket_status: "await",
-            customer_id: data.customer_code,
-            customer_name: data.customer_name,
-            created_by: "1000"
         })
     }
     return (
@@ -142,7 +153,7 @@ const TicketForm = (props: Props) => {
             <AppButton
                 title="Valider"
                 onPress={handleSubmit(onSubmit)}
-                isLoading={isAddingTicket}
+                isLoading={isAddingTicket || isAddingFbTicket}
             />
         </View>
     )

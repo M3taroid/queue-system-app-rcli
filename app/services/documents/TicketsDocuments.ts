@@ -1,6 +1,7 @@
 import {dbCollection} from "../firebaseService";
 import {addDoc, serverTimestamp, deleteDoc, updateDoc, doc, query, where, onSnapshot} from "firebase/firestore";
 import {getTodayDate} from "../../utils";
+import {useMutation} from "@tanstack/react-query";
 
 type TicketStatusType = "await" | "current" | "received" | "rejected" | "cancelled"
 
@@ -45,6 +46,17 @@ export const ticketCollection = dbCollection("tickets");
 
 export const addTicketDocument = async (item: TicketItemType) => {
     return await addDoc(ticketCollection, {...item, created_at: serverTimestamp()})
+}
+
+export const UseAddTicketDocument = () => {
+    return useMutation({
+        mutationFn: async (item: TicketItemType) => {
+            return await addDoc(ticketCollection, {
+                ...item,
+                created_at: serverTimestamp()
+            });
+        },
+    });
 }
 
 export const updateTicketDocument = async (id: string, item: { [key: string]: any }) => {

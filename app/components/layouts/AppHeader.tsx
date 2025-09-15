@@ -52,10 +52,10 @@ const AppHeader = (props: AppHeaderProps) => {
 const styles = StyleSheet.create({
     container: {
         width: '100%',
-        height: 100,
+        height: 80,
         alignItems: "center",
         justifyContent: 'space-between',
-        paddingTop: 30,
+        paddingTop: 5,
         flexDirection: 'row',
         paddingHorizontal: screenHP
     },
