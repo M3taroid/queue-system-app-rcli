@@ -45,6 +45,7 @@ export function toPrinterBytes(...args: (string | number[])[]): Uint8Array {
 
 export const getTicketTemplate = (data: {
     number: string
+    service: string
     date: string
     customerCode: string
     customerName: string
@@ -59,11 +60,15 @@ export const getTicketTemplate = (data: {
         POS.DOUBLE_HEIGHT_DOUBLE_WIDTH,
         data.number,
         POS.NORMAL_FONT,
+        data.service,
+        "\n",
         POS.ALIGN_LEFT,
         "------------------------------\n",
-        "CODE: "+data.customerCode+"\n",
-        "NOM: "+data.customerName+"\n",
-        "DATE: "+data.date+"\n",
+        POS.BOLD_ON,
+        "CODE: " + data.customerCode + "\n",
+        POS.BOLD_OFF,
+        "NOM: " + data.customerName + "\n",
+        "DATE: " + data.date + "\n",
         "------------------------------\n\n",
         POS.ALIGN_CENTER,
         "Ceci n'est pas\n",

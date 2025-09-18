@@ -2,7 +2,6 @@ import {Controller, FieldValues, useForm} from "react-hook-form";
 import {Alert, View} from "react-native";
 import {AppButton, AppInput, AppText} from "../../components";
 import {
-    addTicketDocument,
     hotGetTodayTicketsDocByService,
     UseAddOpenTicket,
     UseAddTicketDocument
@@ -62,6 +61,7 @@ const TicketForm = (props: Props) => {
                     number: ticketData?.number,
                     customerCode: ticketData?.customer_code,
                     customerName: ticketData?.customer_name,
+                    service: `${ticketType?.title}`,
                 })
                 Alert.alert("Message", "Imprimer le ticket", [
                         {
