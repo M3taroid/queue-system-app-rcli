@@ -13,19 +13,16 @@ import {AppHeader, AppModal, AppText, ErrorState} from "../../components";
 import {Feather} from "@react-native-vector-icons/feather";
 import {TicketForm, TicketMultiForm} from "../index.ts";
 import {ItemType} from "../../types";
-import {Colors} from "../../constants";
-import HomeMulti from "./HomeMulti.tsx";
 
 const itemBgs = [
     "#134e4a",
     "#312e81",
 ]
 
-const Home = () => {
-    const [showMenu, setShowMenu] = useState<boolean>(false);
+const HomeMulti = () => {
     const [selectedItem, setSelectedItem] = useState<ItemType | null>(null);
     const [modalVisible, setModalVisible] = useState<boolean>(false)
-    const colors = Colors["light"]
+
     const {
         isPending: isGettingServices,
         data: services,
@@ -50,12 +47,12 @@ const Home = () => {
                     onPress={() => ItemPress(item)}
                 >
                     <View style={styles.itemIconContainer}>
-                        <Feather name="bookmark" style={{fontSize: 20, color: itemBgs[index]}}/>
+                        <Feather name="plus" style={{fontSize: 15, color: itemBgs[index]}}/>
                     </View>
                     <AppText
-                        text={item.title}
+                        text={` + ${item.title}`}
                         color="#FFF"
-                        style={{fontSize: 17, fontWeight: "900", textTransform: "uppercase"}}
+                        style={{fontSize: 14, fontWeight: "900", textTransform: "uppercase"}}
                     />
                 </TouchableOpacity>
             </View>
@@ -67,16 +64,6 @@ const Home = () => {
         if (services?.responseData?.data?.length) {
             return (
                 <View style={{width: "100%"}}>
-                    <AppText
-                        text="Générer un Ticket"
-                        style={{
-                            fontSize: 21,
-                            fontWeight: "900",
-                            textTransform: "uppercase",
-                            textAlign: "center",
-                            paddingBottom: 20
-                        }}
-                    />
                     <FlatList
                         data={services?.responseData?.data}
                         keyExtractor={(item) => item?.id?.toString()}
@@ -101,12 +88,10 @@ const Home = () => {
 
     return (
         <View style={{flex: 1}}>
-            <AppHeader
-                showBackIcon
-                title="Queue System"
-                LeftIcon={<Feather name="menu" size={40} color={colors.white}/>}
-                onLeftPress={() => setShowMenu(prev => !prev)}
-            />
+            {/*<AppHeader*/}
+            {/*    showBackIcon={false}*/}
+            {/*    title="Queue System"*/}
+            {/*/>*/}
             <View style={styles.container}>
                 {renderView()}
             </View>
@@ -116,23 +101,11 @@ const Home = () => {
                 visible={modalVisible}
                 onClose={() => setModalVisible(false)}
                 children={
-                   <>
-                       <TicketForm onFish={() => setModalVisible(false)} ticketType={selectedItem}/>
-                   </>
+                    <>
+                         <TicketMultiForm onFish={() => setModalVisible(false)} ticketType={selectedItem}/>
+                    </>
                 }
             />
-
-            {showMenu ? <View style={{
-                height: 1000,
-                width: "50%",
-                zIndex: 12,
-                position: "absolute",
-                left: 0,
-                top: 80,
-                backgroundColor: "white"
-            }}>
-                <HomeMulti/>
-            </View> : null}
         </View>
     )
 }
@@ -144,7 +117,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     itemContainer: {
-        width: "90%",
+        width: "95%",
         paddingVertical: 15,
         justifyContent: "center",
         alignItems: "center",
@@ -154,8 +127,8 @@ const styles = StyleSheet.create({
     },
     itemIconContainer: {
         backgroundColor: "#FFFFFF",
-        width: 50,
-        height: 50,
+        width: 40,
+        height: 40,
         borderRadius: 80,
         justifyContent: "center",
         alignItems: "center",
@@ -163,4 +136,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default Home
+export default HomeMulti

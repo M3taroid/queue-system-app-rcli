@@ -4,7 +4,7 @@ import Colors from "../../constants/Colors";
 import AppText from "../basics/AppText";
 import {screenHP} from "../../styles";
 import {useNavigation} from '@react-navigation/native';
-import { Feather } from "@react-native-vector-icons/feather";
+import {Feather} from "@react-native-vector-icons/feather";
 
 
 type AppHeaderProps = {
@@ -12,11 +12,13 @@ type AppHeaderProps = {
     titleStyle?: TextStyle;
     showBackIcon?: boolean;
     RightIcon?: ReactNode
+    LeftIcon?: ReactNode
     onRightPress?: () => void;
+    onLeftPress?: () => void;
 }
 
 const AppHeader = (props: AppHeaderProps) => {
-    const {title, titleStyle, showBackIcon = true, RightIcon, onRightPress} = props;
+    const {title, titleStyle, showBackIcon = true, RightIcon, onRightPress, LeftIcon, onLeftPress} = props;
     const navigation = useNavigation();
     const colors = Colors["light"]
 
@@ -28,7 +30,7 @@ const AppHeader = (props: AppHeaderProps) => {
                 </TouchableOpacity>
             )
         }
-        if(showBackIcon)  return <View style={{width: 30}}></View>
+        if (showBackIcon) return <View style={{width: 30}}></View>
         return null
     }
 
@@ -36,8 +38,8 @@ const AppHeader = (props: AppHeaderProps) => {
         <View style={[styles.container, {backgroundColor: colors.primary}]}>
             <View>
                 {showBackIcon ? (
-                    <TouchableOpacity onPress={() => navigation.goBack()}>
-                        <Feather name="arrow-left" size={30} color={colors.white}/>
+                    <TouchableOpacity onPress={onLeftPress ? () => onLeftPress() : () => navigation.goBack()}>
+                        {LeftIcon ? LeftIcon : <Feather name="arrow-left" size={30} color={colors.white}/>}
                     </TouchableOpacity>
                 ) : null}
             </View>

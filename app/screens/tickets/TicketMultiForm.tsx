@@ -10,7 +10,7 @@ import {
 import moment from "moment";
 import {TicketItemType} from "../../services/documents/TicketsDocuments.ts";
 import {useEffect, useState} from "react";
-import AppPrinter from "../../utils/AppPrinter.ts";
+import AppPrinter, {getMultiTicketsTemplate} from "../../utils/AppPrinter.ts";
 import {ItemType} from "../../types";
 import Colors from "../../constants/Colors.ts";
 import {ticketTypesKeys} from "../../constants";
@@ -75,10 +75,9 @@ const TicketMultiForm = (props: Props) => {
             if (addResult?.responseData?.error === false) {
                 const template = AppPrinter.getMultiTicketsTemplate({
                     date: ticketData?.datetime,
-                    numberOfTicket: ticketData?.numberOfTicket,
                     firstTicketNumber: firstTicketNumber,
                     service: `${ticketType?.title}`,
-                })
+                }, parseInt(ticketData?.numberOfTicket))
                 Alert.alert("Message", "Imprimer le ticket", [
                         {
                             text: "OK",
