@@ -15,5 +15,6 @@ export {
     deleteTicketsDocument,
     updateTicketDocument,
     hotGetTodayTicketsDocByService,
-    UseAddTicketDocument
+    UseAddTicketDocument,
+    hotGetLastTicketsDocByServiceAndDate
 } from "./documents/TicketsDocuments"

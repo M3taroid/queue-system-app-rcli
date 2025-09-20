@@ -43,6 +43,43 @@ export function toPrinterBytes(...args: (string | number[])[]): Uint8Array {
     return new Uint8Array(buffer);
 }
 
+export const getMultiTicketsTemplate = (data: {
+    numberOfTicket: string
+    firstTicketNumber: string
+    service: string
+    date: string
+}) => {
+    let dataString = ""
+    for (let i = 0; i < parseInt(data.numberOfTicket); i++) {
+        dataString += `
+        ${POS.ALIGN_CENTER},
+        ${POS.DOUBLE_HEIGHT_DOUBLE_WIDTH},
+        "B.D.G\\n",
+        ${POS.NORMAL_FONT},
+        "JETON D'ARRIVEE\\n\\n",
+        "------------------------------\\n",
+        ${POS.DOUBLE_HEIGHT_DOUBLE_WIDTH},
+        ${parseInt(data.firstTicketNumber)+i},
+        ${POS.NORMAL_FONT},
+        ${data.service},
+        "\\n",
+        ${POS.ALIGN_LEFT},
+        "------------------------------\\n",
+        "DATE: " + ${data.date} + "\\n",
+        "------------------------------\\n\\n",
+        ${POS.ALIGN_CENTER},
+        "Ceci n'est pas\\n",
+        "un recu de paiement! Merci\\n",
+        "\\n\\n\\n\\n\\n\\n",
+        "\\n\\n\\n\\n",
+        `
+    }
+    return toPrinterBytes(
+        dataString,
+        POS.PAPER_CUT,
+    )
+}
+
 export const getTicketTemplate = (data: {
     number: string
     service: string
@@ -134,4 +171,5 @@ export default {
     connectToPrinter,
     disconnectPrinter,
     printOnDevice,
+    getMultiTicketsTemplate
 }

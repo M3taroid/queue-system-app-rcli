@@ -20,11 +20,12 @@ type Props = {
     onFish?: () => void
 }
 
-const TicketForm = (props: Props) => {
+const TicketMultiForm = (props: Props) => {
     const {ticketType, onFish} = props;
     const colors = Colors["light"]
     const [todayServicesTickets, setTodayServicesTickets] = useState<TicketItemType[]>([])
     const [lastTicket, setLastTicket] = useState<TicketItemType | null>(null)
+    const [firstTicketNumber, setFirstTicketNumber] = useState<string>("")
     const [ticketData, setTicketData] = useState<ItemType>()
     const [ticketDate, setTicketDate] = useState<Date>(
         moment(new Date(), 'YYYY-MM-DD')?.toDate(),
@@ -72,11 +73,10 @@ const TicketForm = (props: Props) => {
     useEffect(() => {
         if (addResult) {
             if (addResult?.responseData?.error === false) {
-                const template = AppPrinter.getTicketTemplate({
+                const template = AppPrinter.getMultiTicketsTemplate({
                     date: ticketData?.datetime,
-                    number: ticketData?.number,
-                    customerCode: ticketData?.customer_code,
-                    customerName: ticketData?.customer_name,
+                    numberOfTicket: ticketData?.numberOfTicket,
+                    firstTicketNumber: firstTicketNumber,
                     service: `${ticketType?.title}`,
                 })
                 Alert.alert("Message", "Imprimer le ticket", [
@@ -98,23 +98,30 @@ const TicketForm = (props: Props) => {
         const tDateTime = moment().format("DD-MM-YYYY HH:mm:ss");
         const tDate = moment(ticketDate).format('DD-MM-YYYY')
         const tNumber = `${parseInt(lastTicket?.number || "0")+ 1}`
+        const numberOfTicket = parseInt(data.numberOfTicket) || 1
         setTicketData({
             number: `${tNumber}`,
+            numberOfTicket: parseInt(data.numberOfTicket) || 1,
             datetime: tDateTime,
-            customer_name: data.customer_name || "-",
-            customer_code: data.customer_code || "-",
+            customer_name: "-",
+            customer_code: "-",
         })
-        AddFbTicket({
-            number: `${tNumber}`,
-            cashier: "0",
-            date: tDate,
-            datetime: tDateTime,
-            status: ticketTypesKeys.await.id,
-            service: `${ticketType?.id}`,
-            customer_name: data.customer_name || "-",
-            customer_code: data.customer_code || "-",
-            call: 0
-        })
+        setFirstTicketNumber(`${tNumber}`)
+        for (let i = 0; i < numberOfTicket; i++) {
+            const num = parseInt(tNumber) + i
+            AddFbTicket({
+                number: `${num}`,
+                cashier: "0",
+                date: tDate,
+                datetime: tDateTime,
+                status: ticketTypesKeys.await.id,
+                service: `${ticketType?.id}`,
+                customer_name: "-",
+                customer_code: "-",
+                call: 0
+            })
+        }
+
     }
     return (
         <View style={{flex: 1, justifyContent: "space-between", alignItems: "center"}}>
@@ -140,29 +147,29 @@ const TicketForm = (props: Props) => {
 
                 <Controller
                     control={control}
-                    name="customer_code"
+                    name="numberOfTicket"
+                    rules={{
+                        required: {
+                            value: true,
+                            message: 'Entrez le nombre de ticket',
+                        },
+                        min: {
+                            value: 1,
+                            message: 'Minimum 1',
+                        },
+                        max: {
+                            value: 20,
+                            message: 'Maximum 20',
+                        }
+                    }}
                     render={({field: {onChange, onBlur, value}}) => (
                         <AppInput
                             onBlur={onBlur}
                             onChangeText={onChange}
                             value={value}
-                            label="Code Client"
+                            label="Nombre de ticket"
                             keyboardType="numeric"
-                            errorMessage={errors["customer_code"] ? errors["customer_code"]?.message?.toString() : ""}
-                        />
-                    )}
-                />
-
-                <Controller
-                    control={control}
-                    name="customer_name"
-                    render={({field: {onChange, onBlur, value}}) => (
-                        <AppInput
-                            onBlur={onBlur}
-                            onChangeText={onChange}
-                            value={value}
-                            label="Nom du Payeur"
-                            errorMessage={errors["customer_name"] ? errors["customer_name"]?.message?.toString() : ""}
+                            errorMessage={errors["numberOfTicket"] ? errors["numberOfTicket"]?.message?.toString() : ""}
                         />
                     )}
                 />
@@ -177,4 +184,4 @@ const TicketForm = (props: Props) => {
     )
 }
 
-export default TicketForm;
+export default TicketMultiForm;

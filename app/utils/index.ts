@@ -31,3 +31,26 @@ export const HasPermissions = (permission:  string, userPermissions: any, action
     }
     return false
 }
+
+export const sortArrayByDate = (arr: any[], dateField: string, order: "asc" | "desc" = "asc") => {
+    return [...arr].sort((a, b) => {
+        console.log("A", new Date(a[dateField])!.getTime())
+        console.log("B", new Date(b[dateField])!.getTime())
+        if (order === "asc") return new Date(a[dateField])!.getTime() - new Date(b[dateField])!.getTime();
+        else return new Date(b[dateField])!.getTime() - new Date(a[dateField])!.getTime();
+    });
+
+}
+export const sortArrayByDateMoment = (arr: any[], dateField: string, order: "asc" | "desc" = "asc") => {
+    return [...arr].sort((a: any, b: any) => {
+        if (order === "asc") return  moment(b[dateField]).diff(moment(a[dateField]));
+        else return moment(a[dateField]).diff(moment(b[dateField]));
+    });
+}
+
+export const sortArrayByNumber = (arr: any[], dateField: string, order: "asc" | "desc" = "asc") => {
+    return [...arr].sort((a: any, b: any) => {
+        if (order === "asc") return  parseFloat(a[dateField]) - parseFloat(b[dateField]);
+        else return parseFloat(b[dateField]) - parseFloat(a[dateField]);
+    });
+}

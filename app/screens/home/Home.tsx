@@ -11,7 +11,7 @@ import {useEffect, useState} from "react";
 import {AppPermissions} from "../../utils";
 import {AppHeader, AppModal, AppText, ErrorState} from "../../components";
 import {Feather} from "@react-native-vector-icons/feather";
-import {TicketForm} from "../index.ts";
+import {TicketForm, TicketMultiForm} from "../index.ts";
 import {ItemType} from "../../types";
 
 const itemBgs = [
@@ -20,8 +20,8 @@ const itemBgs = [
 ]
 
 const Home = () => {
-    const [device, setDevice] = useState<any>(null);
     const [selectedItem, setSelectedItem] = useState<ItemType | null>(null);
+    const [formType, setFormType] = useState<"single" | "multi">("single");
     const [modalVisible, setModalVisible] = useState<boolean>(false)
 
     const {
@@ -35,44 +35,43 @@ const Home = () => {
         subscribe()
     }, []);
 
-    const ItemPress = (item: ItemType) => {
+    const ItemPress = (item: ItemType, type: "single" | "multi") => {
+        setFormType(type)
         setSelectedItem(item)
         setTimeout(() => setModalVisible(true), 200)
     }
 
     const renderItem = (item: any, index: number) => {
         return (
-            <TouchableOpacity
-                style={{
-                    //height: 150,
-                    width: "100%",
-                    paddingVertical: 30,
-                    backgroundColor: itemBgs[index],
-                    justifyContent: "center",
-                    alignItems: "center",
-                    alignSelf: "center",
-                    marginBottom: 20,
-                    borderRadius: 10
-                }}
-                onPress={() => ItemPress(item)}
-            >
-                <View style={{
-                    backgroundColor: "#FFFFFF",
-                    width: 80,
-                    height: 80,
-                    borderRadius: 80,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    marginBottom: 15
-                }}>
-                    <Feather name="bookmark" style={{fontSize: 50, color: itemBgs[index]}}/>
-                </View>
-                <AppText
-                    text={item.title}
-                    color="#FFF"
-                    style={{fontSize: 21, fontWeight: "900", textTransform: "uppercase"}}
-                />
-            </TouchableOpacity>
+            <View style={{flexDirection: "row", justifyContent: "center", alignItems: "center", gap: 10}}>
+                <TouchableOpacity
+                    style={[styles.itemContainer, {backgroundColor: itemBgs[index]}]}
+                    onPress={() => ItemPress(item, "single")}
+                >
+                    <View style={styles.itemIconContainer}>
+                        <Feather name="bookmark" style={{fontSize: 20, color: itemBgs[index]}}/>
+                    </View>
+                    <AppText
+                        text={item.title}
+                        color="#FFF"
+                        style={{fontSize: 17, fontWeight: "900", textTransform: "uppercase"}}
+                    />
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    style={[styles.itemContainer, {backgroundColor: itemBgs[index]}]}
+                    onPress={() => ItemPress(item, "multi")}
+                >
+                    <View style={styles.itemIconContainer}>
+                        <Feather name="plus" style={{fontSize: 20, color: itemBgs[index]}}/>
+                    </View>
+                    <AppText
+                        text={` + ${item.title}`}
+                        color="#FFF"
+                        style={{fontSize: 17, fontWeight: "900", textTransform: "uppercase"}}
+                    />
+                </TouchableOpacity>
+            </View>
         )
     }
 
@@ -124,11 +123,14 @@ const Home = () => {
             </View>
 
             <AppModal
-                modalHeight="70%"
+                modalHeight="80%"
                 visible={modalVisible}
                 onClose={() => setModalVisible(false)}
                 children={
-                    <TicketForm onFish={() => setModalVisible(false)} ticketType={selectedItem}/>
+                   <>
+                       {formType === "single" ? <TicketForm onFish={() => setModalVisible(false)} ticketType={selectedItem}/> : null}
+                       {formType === "multi" ? <TicketMultiForm onFish={() => setModalVisible(false)} ticketType={selectedItem}/> : null}
+                   </>
                 }
             />
         </View>
@@ -141,6 +143,24 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
     },
+    itemContainer: {
+        width: "45%",
+        paddingVertical: 15,
+        justifyContent: "center",
+        alignItems: "center",
+        alignSelf: "center",
+        marginBottom: 20,
+        borderRadius: 10
+    },
+    itemIconContainer: {
+        backgroundColor: "#FFFFFF",
+        width: 50,
+        height: 50,
+        borderRadius: 80,
+        justifyContent: "center",
+        alignItems: "center",
+        marginBottom: 15
+    }
 })
 
 export default Home
